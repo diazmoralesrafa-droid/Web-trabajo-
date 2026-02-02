@@ -44,4 +44,63 @@
 
 <script src="app.js"></script>
 </body>
+    <script>
+// ====================== Inicializar LocalStorage ======================
+if(!localStorage.getItem('trabajadores')) localStorage.setItem('trabajadores','[]');
+if(!localStorage.getItem('presencias')) localStorage.setItem('presencias','[]');
+
+// ====================== Mostrar alertas ======================
+function mostrarAlerta(elemento,mensaje,tipo){
+  elemento.textContent = mensaje;
+  elemento.className = 'alert '+(tipo==='success'?'alert-success':'alert-error');
+  elemento.style.display='block';
+  setTimeout(()=>{ elemento.style.display='none'; },3000);
+}
+
+// ====================== Registrar trabajador ======================
+function registrarTrabajador(){
+  let dni = document.getElementById('dniTrabajador').value.trim();
+  let nombre = document.getElementById('nombreTrabajador').value.trim();
+  let telefono = document.getElementById('telefonoTrabajador').value.trim();
+  let correo = document.getElementById('correoTrabajador').value.trim();
+  let alertBox = document.getElementById('alertTrabajador');
+
+  if(!dni || !nombre || !telefono || !correo){
+    mostrarAlerta(alertBox,"Completa todos los campos","error");
+    return;
+  }
+
+  let trabajadores = JSON.parse(localStorage.getItem('trabajadores'));
+
+  if(trabajadores.some(t=>t.dni===dni)){
+    mostrarAlerta(alertBox,"El trabajador con este DNI ya existe","error");
+    return;
+  }
+
+  trabajadores.push({dni,nombre,telefono,correo});
+  localStorage.setItem('trabajadores',JSON.stringify(trabajadores));
+
+  mostrarTrabajadores();
+  mostrarAlerta(alertBox,"Trabajador registrado","success");
+
+  // Limpiar campos
+  document.getElementById('dniTrabajador').value='';
+  document.getElementById('nombreTrabajador').value='';
+  document.getElementById('telefonoTrabajador').value='';
+  document.getElementById('correoTrabajador').value='';
+}
+
+// ====================== Mostrar lista de trabajadores ======================
+function mostrarTrabajadores(){
+  let lista = document.getElementById('listaTrabajadores');
+  let trabajadores = JSON.parse(localStorage.getItem('trabajadores'));
+  lista.innerHTML = '';
+  trabajadores.forEach(t=>{
+    lista.innerHTML += `<div class="list-item">${t.dni} - ${t.nombre} - ${t.telefono} - ${t.correo}</div>`;
+  });
+}
+
+// ====================== Inicializar al cargar la página ======================
+window.onload = mostrarTrabajadores;
+</script>
 </html>
