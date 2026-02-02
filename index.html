@@ -101,14 +101,7 @@ function registrarTrabajador(){
   document.getElementById('correoTrabajador').value='';
 }
 
-// ====================== Mostrar lista de trabajadores ======================
-function mostrarTrabajadores(){
-  let lista = document.getElementById('listaTrabajadores');
-  let trabajadores = JSON.parse(localStorage.getItem('trabajadores'));
-  lista.innerHTML = '';
-  trabajadores.forEach(t=>{
-    lista.innerHTML += `<div class="list-item">${t.dni} - ${t.nombre} - ${t.telefono} - ${t.correo}</div>`;
-  });
+
 }
 
 // ====================== Inicializar al cargar la página ======================
